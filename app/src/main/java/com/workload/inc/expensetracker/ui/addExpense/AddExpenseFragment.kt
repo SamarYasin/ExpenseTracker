@@ -1,0 +1,113 @@
+package com.workload.inc.expensetracker.ui.addExpense
+
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import com.workload.inc.expensetracker.R
+import com.workload.inc.expensetracker.base.BaseFragment
+import com.workload.inc.expensetracker.data.expenseNameList
+import com.workload.inc.expensetracker.databinding.FragmentAddExpenseBinding
+import com.workload.inc.expensetracker.localDb.room.ExpenseEntry
+import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPrefKeys
+import com.workload.inc.expensetracker.utils.getDate
+import com.workload.inc.expensetracker.utils.getTime
+import com.workload.inc.expensetracker.utils.setSafeOnClickListener
+import com.workload.inc.expensetracker.utils.showToast
+import com.workload.inc.expensetracker.viewmodel.MainViewModel
+
+class AddExpenseFragment : BaseFragment<FragmentAddExpenseBinding>() {
+
+    private val TAG = "AddExpenseFragment"
+    private var selectedExpense: String = ""
+    private val mainViewModel: MainViewModel by activityViewModels()
+
+    override fun getResLayout(): Int {
+        return R.layout.fragment_add_expense
+    }
+
+    override fun inflateViewBinding(): FragmentAddExpenseBinding {
+        return FragmentAddExpenseBinding.inflate(layoutInflater)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            expenseNameList
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        viewBinding.expenseSpinner.adapter = adapter
+
+        viewBinding.expenseSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    selectedExpense = expenseNameList[position]
+                    Log.d(TAG, "Selected Expense: $selectedExpense")
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    Log.d(TAG, "No Expense Type Selected")
+                    showToast("Please select an expense type")
+                }
+            }
+
+        val selectedDateFormat = mainViewModel.getValue(AppSharedPrefKeys.DATE_FORMAT)
+        val formattedDate = if (selectedDateFormat.isNullOrEmpty()) {
+            getDate("dd/MM/yyyy")
+        } else {
+            getDate(selectedDateFormat!!)
+        }
+        viewBinding.selectedDateFormatTV.text = formattedDate
+
+        viewBinding.addExpenseButton.setSafeOnClickListener {
+
+            if (selectedExpense.isEmpty()) {
+                showToast("Please select an expense type")
+                return@setSafeOnClickListener
+            }
+
+            if (viewBinding.expenseDetailET.text.isNullOrEmpty()) {
+                showToast("Please enter expense details")
+                return@setSafeOnClickListener
+            }
+
+            if (viewBinding.amountET.text.isNullOrEmpty()) {
+                showToast("Please enter amount")
+                return@setSafeOnClickListener
+            }
+
+            val model = ExpenseEntry(
+                expenseType = selectedExpense,
+                expenseDetail = viewBinding.expenseDetailET.text.toString(),
+                expenseAmount = viewBinding.amountET.text.toString(),
+                date = getDate(selectedDateFormat, System.currentTimeMillis()),
+                time = getTime(selectedDateFormat, System.currentTimeMillis()),
+            )
+
+            Log.d(TAG, "Expense Model: $model")
+
+            mainViewModel.addExpense(
+                expenseEntry = model,
+                date = System.currentTimeMillis()
+            )
+            mainViewModel.getAllDailyExpenseEntries()
+
+            showToast("Expense Added Successfully")
+            findNavController().popBackStack()
+
+        }
+
+    }
+
+}
