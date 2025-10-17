@@ -2,10 +2,10 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "10a1d2f2c5918254d214992ba0b96aa2",
+    "identityHash": "464bc9039d48eb938711ca57c0ca1b80",
     "entities": [
       {
-        "tableName": "daily_expense_table",
+        "tableName": "daily_expense_entry_table",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`residenceExpense` TEXT NOT NULL, `foodExpense` TEXT NOT NULL, `entertainmentExpense` TEXT NOT NULL, `insuranceExpense` TEXT NOT NULL, `utilitiesExpense` TEXT NOT NULL, `personalCareExpense` TEXT NOT NULL, `educationExpense` TEXT NOT NULL, `healthExpense` TEXT NOT NULL, `othersExpense` TEXT NOT NULL, `fuelExpense` TEXT NOT NULL, `clothingExpense` TEXT NOT NULL, `shoppingExpense` TEXT NOT NULL, `giftsDonationsExpense` TEXT NOT NULL, `travelExpense` TEXT NOT NULL, `taxesExpense` TEXT NOT NULL, `date` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
@@ -165,11 +165,53 @@
             "id"
           ]
         }
+      },
+      {
+        "tableName": "user_finance_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `totalIncome` INTEGER NOT NULL, `totalExpense` INTEGER NOT NULL, `balance` INTEGER NOT NULL, `budget` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalIncome",
+            "columnName": "totalIncome",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalExpense",
+            "columnName": "totalExpense",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "balance",
+            "columnName": "balance",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "budget",
+            "columnName": "budget",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '10a1d2f2c5918254d214992ba0b96aa2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '464bc9039d48eb938711ca57c0ca1b80')"
     ]
   }
 }

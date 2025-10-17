@@ -10,19 +10,19 @@ import androidx.room.Update
 interface ExpenseEntryDao {
 
     @Query("SELECT * FROM expense_entry_table")
-    suspend fun getAll(): List<ExpenseEntry>
+    suspend fun getAll(): List<ExpenseEntryModel>
 
     @Query("SELECT * FROM expense_entry_table WHERE date = :date")
-    suspend fun getAllByDate(date: String): List<ExpenseEntry>
+    suspend fun getAllByDate(date: String): List<ExpenseEntryModel>
 
     @Insert
-    suspend fun insert(vararg expenseEntry: ExpenseEntry)
+    suspend fun insert(vararg expenseEntryModel: ExpenseEntryModel)
 
     @Update
-    suspend fun update(expenseEntry: ExpenseEntry)
+    suspend fun update(expenseEntryModel: ExpenseEntryModel)
 
     @Delete
-    suspend fun delete(expenseEntry: ExpenseEntry)
+    suspend fun delete(expenseEntryModel: ExpenseEntryModel)
 
     @Query("DELETE FROM expense_entry_table")
     suspend fun deleteAll()

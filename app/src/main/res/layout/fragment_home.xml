@@ -96,7 +96,7 @@
                         android:letterSpacing="-0.03"
                         android:includeFontPadding="false"
                         android:lineSpacingExtra="0dp"
-                        android:text="1000 $"
+                        android:text="0 $"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -134,7 +134,7 @@
                         android:letterSpacing="-0.03"
                         android:includeFontPadding="false"
                         android:lineSpacingExtra="0dp"
-                        android:text="100 $"
+                        android:text="0 $"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -172,7 +172,7 @@
                         android:letterSpacing="-0.03"
                         android:includeFontPadding="false"
                         android:lineSpacingExtra="0dp"
-                        android:text="900 $"
+                        android:text="0 $"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -235,7 +235,7 @@
             android:id="@+id/incomeFAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_expense"
+            android:src="@drawable/ic_income"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
@@ -253,7 +253,7 @@
             android:id="@+id/expenseFAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_income"
+            android:src="@drawable/ic_expense"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

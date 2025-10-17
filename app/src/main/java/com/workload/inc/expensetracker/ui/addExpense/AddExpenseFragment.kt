@@ -11,7 +11,7 @@ import com.workload.inc.expensetracker.R
 import com.workload.inc.expensetracker.base.BaseFragment
 import com.workload.inc.expensetracker.data.expenseNameList
 import com.workload.inc.expensetracker.databinding.FragmentAddExpenseBinding
-import com.workload.inc.expensetracker.localDb.room.ExpenseEntry
+import com.workload.inc.expensetracker.localDb.room.ExpenseEntryModel
 import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPrefKeys
 import com.workload.inc.expensetracker.utils.DateUtils.formatDateFromMillis
 import com.workload.inc.expensetracker.utils.DateUtils.formatTime12HourFromMillis
@@ -88,7 +88,7 @@ class AddExpenseFragment : BaseFragment<FragmentAddExpenseBinding>() {
                 return@setSafeOnClickListener
             }
 
-            val model = ExpenseEntry(
+            val model = ExpenseEntryModel(
                 expenseType = selectedExpense,
                 expenseDetail = viewBinding.expenseDetailET.text.toString(),
                 expenseAmount = viewBinding.amountET.text.toString(),

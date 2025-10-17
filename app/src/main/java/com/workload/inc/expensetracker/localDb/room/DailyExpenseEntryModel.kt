@@ -3,8 +3,8 @@ package com.workload.inc.expensetracker.localDb.room
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity("daily_expense_table")
-data class DailyExpenseEntry(
+@Entity("daily_expense_entry_table")
+data class DailyExpenseEntryModel(
     var residenceExpense: String = "",
     var foodExpense: String = "",
     var entertainmentExpense: String = "",

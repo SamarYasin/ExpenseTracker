@@ -8,10 +8,11 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.workload.inc.expensetracker.R
 import com.workload.inc.expensetracker.databinding.ExpenseItemBinding
-import com.workload.inc.expensetracker.localDb.room.ExpenseEntry
+import com.workload.inc.expensetracker.localDb.room.ExpenseEntryModel
+import com.workload.inc.expensetracker.utils.CurrencyUtil.withCurrency
 
 class ExpenseAdapter(
-    private var expenseList: List<ExpenseEntry>
+    private var expenseList: List<ExpenseEntryModel>
 ) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
 
     class ExpenseViewHolder(val binding: ExpenseItemBinding) : RecyclerView.ViewHolder(binding.root)
@@ -35,12 +36,12 @@ class ExpenseAdapter(
         val expense = expenseList[position]
         val context = holder.binding.root.context
 
-        val expenseIcon = AppCompatResources.getDrawable(context, R.drawable.ic_expense)
+        val expenseIcon = AppCompatResources.getDrawable(context, R.drawable.ic_income)
         holder.binding.expenseIV.setImageDrawable(getExpenseIcon(context, expense.expenseType))
         holder.binding.amountDirectionIV.setImageDrawable(expenseIcon)
 
         holder.binding.expenseCategoryNameTV.text = expense.expenseType
-        holder.binding.expenseAmountTV.text = expense.expenseAmount.toString()
+        holder.binding.expenseAmountTV.text = expense.expenseAmount.withCurrency()
         holder.binding.expenseNameTV.text = expense.expenseDetail
     }
 
@@ -135,7 +136,7 @@ class ExpenseAdapter(
         return expenseList.size
     }
 
-    fun updateList(newExpenseList: List<ExpenseEntry>) {
+    fun updateList(newExpenseList: List<ExpenseEntryModel>) {
         expenseList = newExpenseList
         notifyDataSetChanged()
     }

@@ -2,9 +2,10 @@ package com.workload.inc.expensetracker.di
 
 import android.content.Context
 import androidx.room.Room
-import com.workload.inc.expensetracker.localDb.room.DailyExpenseDao
+import com.workload.inc.expensetracker.localDb.room.DailyExpenseEntryDao
 import com.workload.inc.expensetracker.localDb.room.ExpenseEntryDao
 import com.workload.inc.expensetracker.localDb.room.ExpenseTrackerDataBase
+import com.workload.inc.expensetracker.localDb.room.UserFinanceDao
 import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPref
 import dagger.Module
 import dagger.Provides
@@ -28,13 +29,18 @@ object DatabaseModule {
     }
 
     @Provides
-    fun provideDailyExpenseDao(db: ExpenseTrackerDataBase): DailyExpenseDao {
-        return db.dailyExpenseDao()
+    fun provideDailyExpenseDao(db: ExpenseTrackerDataBase): DailyExpenseEntryDao {
+        return db.dailyExpenseEntryDao()
     }
 
     @Provides
     fun provideExpenseEntryDao(db: ExpenseTrackerDataBase): ExpenseEntryDao {
         return db.expenseEntryDao()
+    }
+
+    @Provides
+    fun provideUserFinanceDao(db: ExpenseTrackerDataBase) : UserFinanceDao{
+        return db.userFinanceDao()
     }
 
     @Provides

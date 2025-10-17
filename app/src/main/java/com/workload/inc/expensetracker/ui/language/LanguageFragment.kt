@@ -12,13 +12,15 @@ import com.workload.inc.expensetracker.databinding.FragmentLanguageBinding
 import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPrefKeys
 import com.workload.inc.expensetracker.utils.VerticalSpaceItemDecoration
 import com.workload.inc.expensetracker.utils.setSafeOnClickListener
+import com.workload.inc.expensetracker.utils.showToast
 import com.workload.inc.expensetracker.viewmodel.OnBoardingViewModel
 
 class LanguageFragment : BaseFragment<FragmentLanguageBinding>() {
 
     private val TAG = "LanguageFragment"
-    private var languageAdapter : LanguageAdapter? = null
-    private val onBoardingViewModel : OnBoardingViewModel by activityViewModels()
+    private var languageAdapter: LanguageAdapter? = null
+    private var selectedLanguage: String? = null
+    private val onBoardingViewModel: OnBoardingViewModel by activityViewModels()
 
     override fun getResLayout(): Int {
         return R.layout.fragment_language
@@ -33,11 +35,11 @@ class LanguageFragment : BaseFragment<FragmentLanguageBinding>() {
 
         languageAdapter = LanguageAdapter(
             languages = languageList,
-            onLanguageSelected = { languageModel, position,  ->
+            onLanguageSelected = { languageModel, position ->
                 Log.d(TAG, "Language selected : $languageModel")
                 viewBinding.selectedLanguageTV.text = languageModel.languageName
                 viewBinding.selectedLanguageRB.isChecked = true
-                onBoardingViewModel.setValue(AppSharedPrefKeys.SELECTED_LANGUAGE, languageModel.languageCode)
+                selectedLanguage = languageModel.languageCode
                 languageAdapter?.notifyChange(position)
             }
         )
@@ -47,7 +49,12 @@ class LanguageFragment : BaseFragment<FragmentLanguageBinding>() {
 
         viewBinding.nextTV.setSafeOnClickListener {
             Log.d(TAG, "Next clicked")
-            findNavController().navigate(R.id.action_languageFragment_to_onBoardingFragment)
+            if (selectedLanguage != null) {
+                onBoardingViewModel.setValue(AppSharedPrefKeys.SELECTED_LANGUAGE, selectedLanguage!!)
+                findNavController().navigate(R.id.action_languageFragment_to_onBoardingFragment)
+            } else {
+                showToast("Please select language")
+            }
         }
 
     }

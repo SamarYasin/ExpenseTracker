@@ -68,7 +68,3 @@ fun View.showView() {
 fun View.goneView() {
     this.visibility = View.GONE
 }
-
-fun String.withCurrency(currency: String): String {
-    return "$this $currency"
-}

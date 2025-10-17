@@ -20,6 +20,9 @@ class CurrencyBottomSheet(
 
     private var _binding: CurrencyBottomSheetBinding? = null
     private val binding get() = _binding!!
+    private var isSpinnerInitialized = false
+    private var selectedCurrency: String? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +45,14 @@ class CurrencyBottomSheet(
             dismiss()
         }
 
+        binding.doneBtn.setSafeOnClickListener {
+            Log.d(TAG, "doneBtn clicked with selected currency: $selectedCurrency")
+            selectedCurrency?.let {
+                onCurrencySelected?.invoke(it)
+            }
+            dismiss()
+        }
+
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, currencyList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.currencySpinner.adapter = adapter
@@ -53,10 +64,13 @@ class CurrencyBottomSheet(
                 position: Int,
                 id: Long
             ) {
-                val selectedCurrency = currencyList[position]
+                if (!isSpinnerInitialized) {
+                    isSpinnerInitialized = true
+                    return // Ignore initial call
+                }
+                selectedCurrency = currencyList[position]
+                Log.d(TAG, "Selected currency: $selectedCurrency")
                 binding.selectedDateFormatTV.text = selectedCurrency
-                onCurrencySelected?.invoke(selectedCurrency)
-                dismiss()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {

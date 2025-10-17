@@ -12,8 +12,10 @@ import com.workload.inc.expensetracker.bottomSheet.BudgetBottomSheet
 import com.workload.inc.expensetracker.bottomSheet.CurrencyBottomSheet
 import com.workload.inc.expensetracker.bottomSheet.IncomeBottomSheet
 import com.workload.inc.expensetracker.databinding.FragmentHomeBinding
-import com.workload.inc.expensetracker.localDb.room.DailyExpenseEntry
+import com.workload.inc.expensetracker.localDb.room.DailyExpenseEntryModel
 import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPrefKeys
+import com.workload.inc.expensetracker.utils.CurrencyUtil
+import com.workload.inc.expensetracker.utils.CurrencyUtil.withCurrency
 import com.workload.inc.expensetracker.utils.DateUtils.formatDateFromMillis
 import com.workload.inc.expensetracker.utils.VerticalSpaceItemDecoration
 import com.workload.inc.expensetracker.utils.goneView
@@ -66,6 +68,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             mainViewModel.getExpenseForToday(formattedDate)
             // Entries for Entire Day
             mainViewModel.getAllDailyExpenseEntries()
+            // User Financial Situation
+            mainViewModel.userFinancialSituation
         }
 
         expenseAdapter = ExpenseAdapter(
@@ -139,7 +143,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             CurrencyBottomSheet(
                 onCurrencySelected = { selectedCurrency ->
                     Log.d(TAG, "onViewCreated: $selectedCurrency")
-
+                    CurrencyUtil.setCurrencyType(selectedCurrency)
                 }
             ).show(
                 parentFragmentManager,
@@ -157,27 +161,36 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             findNavController().navigate(R.id.action_homeFragment_to_settingFragment)
         }
 
-        mainViewModel.todayExpense.observe(viewLifecycleOwner) { expenseEntries ->
+        // User Daily Expense Entries Observation for Pie Chart
+        mainViewModel.dailyExpenseEntries.observe(viewLifecycleOwner) { expenseEntries ->
             if (expenseEntries.isEmpty()) {
                 Log.d(TAG, "onViewCreated: Empty")
             } else {
                 Log.d(TAG, "onViewCreated: Not Empty")
-                expenseAdapter?.updateList(expenseEntries)
+                setUpPieChart(expenseEntries)
             }
         }
 
-        mainViewModel.expense.observe(viewLifecycleOwner) { entries ->
+        // Individual Expense Entries Observation for RecyclerView
+        mainViewModel.individualExpenseEntries.observe(viewLifecycleOwner) { entries ->
             if (entries.isEmpty()) {
                 Log.d(TAG, "onViewCreated: Empty")
             } else {
                 Log.d(TAG, "onViewCreated: Not Empty")
-                setUpPieChart(entries)
+                expenseAdapter?.updateList(entries)
             }
+        }
+
+        mainViewModel.userFinancialSituation.observe(viewLifecycleOwner) { userFinanceModel ->
+            Log.d(TAG, "onViewCreated: $userFinanceModel")
+            viewBinding.availableBalanceTV.text = userFinanceModel?.balance.toString().withCurrency()
+            viewBinding.availableBudgetTV.text = userFinanceModel?.budget.toString().withCurrency()
+            viewBinding.expenseTV.text = userFinanceModel?.totalExpense.toString().withCurrency()
         }
 
     }
 
-    private fun setUpPieChart(entries: List<DailyExpenseEntry>) {
+    private fun setUpPieChart(entries: List<DailyExpenseEntryModel>) {
 
         entries.forEach { item ->
 

@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity("expense_entry_table")
-data class ExpenseEntry(
+data class ExpenseEntryModel(
     var expenseType: String = "",
     var expenseDetail: String = "",
     var expenseAmount: String = "",

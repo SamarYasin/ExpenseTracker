@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.workload.inc.expensetracker.localDb.room.DailyExpenseDao
-import com.workload.inc.expensetracker.localDb.room.DailyExpenseEntry
-import com.workload.inc.expensetracker.localDb.room.ExpenseEntry
+import com.workload.inc.expensetracker.localDb.room.DailyExpenseEntryDao
+import com.workload.inc.expensetracker.localDb.room.DailyExpenseEntryModel
+import com.workload.inc.expensetracker.localDb.room.ExpenseEntryModel
 import com.workload.inc.expensetracker.localDb.room.ExpenseEntryDao
+import com.workload.inc.expensetracker.localDb.room.UserFinanceDao
+import com.workload.inc.expensetracker.localDb.room.UserFinanceModel
 import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPref
 import com.workload.inc.expensetracker.validator.UserInputValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,16 +20,28 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val appSharedPref: AppSharedPref,
     private val userInputValidator: UserInputValidator,
-    private val dailyExpenseDao: DailyExpenseDao,
+    private val dailyExpenseDao: DailyExpenseEntryDao,
     private val expenseEntryDao: ExpenseEntryDao,
+    private val userFinanceDao: UserFinanceDao,
 ) : ViewModel() {
 
     private val TAG = "MainViewModel"
-    private var _expense: MutableLiveData<List<DailyExpenseEntry>> = MutableLiveData()
-    val expense: LiveData<List<DailyExpenseEntry>> get() = _expense
-    private var _todayExpense: MutableLiveData<List<ExpenseEntry>> = MutableLiveData()
-    val todayExpense: LiveData<List<ExpenseEntry>> get() = _todayExpense
 
+    // Each Day's Total Expense Entry
+    private var _dailyExpenseEntries: MutableLiveData<List<DailyExpenseEntryModel>> = MutableLiveData()
+    val dailyExpenseEntries: LiveData<List<DailyExpenseEntryModel>> get() = _dailyExpenseEntries
+
+    // Individual Expense Entries for Today
+    private var _individualExpenseEntries: MutableLiveData<List<ExpenseEntryModel>> = MutableLiveData()
+    val individualExpenseEntries: LiveData<List<ExpenseEntryModel>> get() = _individualExpenseEntries
+
+    // Overall User Financial Situation, Balance, Income, Expenses, Budget
+    private var _userFinancialSituation: MutableLiveData<UserFinanceModel?> = MutableLiveData()
+    val userFinancialSituation: LiveData<UserFinanceModel?> get() = _userFinancialSituation
+
+    /**
+     * Best to set and get simple key-value pairs in Shared Preferences
+     */
     fun setValue(key: String, value: String) {
         appSharedPref.putString(key, value)
     }
@@ -44,21 +58,49 @@ class MainViewModel @Inject constructor(
         return appSharedPref.getBoolean(key, false)
     }
 
-    fun getExpenseForToday(date: String) {
+
+    /**
+     * For updating user financial situation like balance, income, expenses, budget
+     */
+
+    fun getUserFinancialSituation() {
         viewModelScope.launch {
-            val expense = expenseEntryDao.getAllByDate(date)
-            _todayExpense.value = expense
+            val userFinance = userFinanceDao.getUserFinance()
+            _userFinancialSituation.value = userFinance
         }
     }
 
-    fun addExpense(expenseEntry: ExpenseEntry, formattedDate : String) {
+    fun updateUserFinancialSituation(userFinanceModel: UserFinanceModel) {
+        viewModelScope.launch {
+            userFinanceDao.updateUserFinance(userFinanceModel)
+            getUserFinancialSituation()
+        }
+    }
+
+    /**
+     * For managing individual expense entries
+     */
+
+    fun addExpense(expenseEntry: ExpenseEntryModel, formattedDate: String) {
         viewModelScope.launch {
             expenseEntryDao.insert(expenseEntry)
             getExpenseForToday(formattedDate)
         }
     }
 
-    fun addDailyExpenseEntry(dailyExpenseEntry: DailyExpenseEntry) {
+
+    fun getExpenseForToday(date: String) {
+        viewModelScope.launch {
+            val expense = expenseEntryDao.getAllByDate(date)
+            _individualExpenseEntries.value = expense
+        }
+    }
+
+    /**
+     * For managing daily expense entries
+     */
+
+    fun addDailyExpenseEntry(dailyExpenseEntry: DailyExpenseEntryModel) {
         viewModelScope.launch {
             dailyExpenseDao.insert(dailyExpenseEntry)
         }
@@ -67,7 +109,7 @@ class MainViewModel @Inject constructor(
     fun getAllDailyExpenseEntries() {
         viewModelScope.launch {
             val expenseList = dailyExpenseDao.getAll()
-            _expense.value = expenseList
+            _dailyExpenseEntries.value = expenseList
         }
     }
 

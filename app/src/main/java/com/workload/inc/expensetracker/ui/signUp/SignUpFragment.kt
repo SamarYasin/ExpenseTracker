@@ -12,6 +12,7 @@ import com.workload.inc.expensetracker.base.BaseFragment
 import com.workload.inc.expensetracker.data.dateTimeFormats
 import com.workload.inc.expensetracker.databinding.FragmentSignUpBinding
 import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPrefKeys
+import com.workload.inc.expensetracker.utils.CurrencyUtil
 import com.workload.inc.expensetracker.utils.setSafeOnClickListener
 import com.workload.inc.expensetracker.utils.showToast
 import com.workload.inc.expensetracker.viewmodel.OnBoardingViewModel
@@ -45,6 +46,13 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
 
             if (registrationError.isEmpty()) {
                 findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
+
+                onBoardingViewModel.setValue(AppSharedPrefKeys.USER_NAME, viewBinding.nameET.text.toString())
+                onBoardingViewModel.setValue(AppSharedPrefKeys.USER_EMAIL, viewBinding.emailET.text.toString())
+                onBoardingViewModel.setValue(AppSharedPrefKeys.USER_PASSWORD, viewBinding.passwordET.text.toString())
+                onBoardingViewModel.setValue(AppSharedPrefKeys.PHONE_NUMBER, viewBinding.phoneET.text.toString())
+                onBoardingViewModel.setValue(AppSharedPrefKeys.DATE_FORMAT, viewBinding.selectedDateFormatTV.text.toString())
+
             } else {
                 showToast(registrationError)
             }
@@ -63,7 +71,6 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
                 val selectedFormat = dateTimeFormats[position]
                 Log.d(TAG, "Selected date format: $selectedFormat")
                 viewBinding.selectedDateFormatTV.text = selectedFormat
-                onBoardingViewModel.setValue(AppSharedPrefKeys.DATE_FORMAT, selectedFormat)
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
                 Log.d(TAG, "No date format selected")

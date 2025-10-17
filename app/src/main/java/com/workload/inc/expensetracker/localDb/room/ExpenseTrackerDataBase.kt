@@ -5,14 +5,20 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [DailyExpenseEntry::class, ExpenseEntry::class], version = 1, exportSchema = true)
+@Database(
+    entities = [DailyExpenseEntryModel::class, ExpenseEntryModel::class, UserFinanceModel::class],
+    version = 1,
+    exportSchema = true
+)
 abstract class ExpenseTrackerDataBase : RoomDatabase() {
 
-    abstract fun dailyExpenseDao(): DailyExpenseDao
+    abstract fun dailyExpenseEntryDao(): DailyExpenseEntryDao
     abstract fun expenseEntryDao(): ExpenseEntryDao
+    abstract fun userFinanceDao(): UserFinanceDao
 
     companion object {
-        @Volatile private var INSTANCE: ExpenseTrackerDataBase? = null
+        @Volatile
+        private var INSTANCE: ExpenseTrackerDataBase? = null
 
         fun getInstance(context: Context): ExpenseTrackerDataBase {
             return INSTANCE ?: synchronized(this) {
