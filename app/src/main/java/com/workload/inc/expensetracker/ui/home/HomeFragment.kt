@@ -11,9 +11,10 @@ import com.workload.inc.expensetracker.base.BaseFragment
 import com.workload.inc.expensetracker.databinding.FragmentHomeBinding
 import com.workload.inc.expensetracker.localDb.room.DailyExpenseEntry
 import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPrefKeys
+import com.workload.inc.expensetracker.utils.DateUtils.formatDateFromMillis
 import com.workload.inc.expensetracker.utils.VerticalSpaceItemDecoration
-import com.workload.inc.expensetracker.utils.getDate
 import com.workload.inc.expensetracker.utils.setSafeOnClickListener
+import com.workload.inc.expensetracker.utils.showToast
 import com.workload.inc.expensetracker.viewmodel.MainViewModel
 import org.eazegraph.lib.models.PieModel
 
@@ -37,6 +38,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private var taxesExpense: Int = 0
     private val mainViewModel: MainViewModel by activityViewModels()
     private var expenseAdapter: ExpenseAdapter? = null
+    private var formattedDate: String = ""
 
     override fun getResLayout(): Int {
         return R.layout.fragment_home
@@ -50,17 +52,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         val selectedDateFormat = mainViewModel.getValue(AppSharedPrefKeys.DATE_FORMAT)
-        val formattedDate = if (selectedDateFormat.isNullOrEmpty()) {
-            getDate("dd/MM/yyyy")
+        if (selectedDateFormat.isNullOrEmpty()) {
+            showToast("Date format not set.")
         } else {
-            getDate(selectedDateFormat!!)
+            formattedDate = formatDateFromMillis(System.currentTimeMillis(), selectedDateFormat)
+            // Entries for each expense category
+            mainViewModel.getExpenseForToday(formattedDate)
+            // Entries for Entire Day
+            mainViewModel.getAllDailyExpenseEntries()
         }
-
-
-        // Entries for each expense category
-        mainViewModel.getExpenseForToday(formattedDate)
-        // Entries for Entire Day
-        mainViewModel.getAllDailyExpenseEntries()
 
         expenseAdapter = ExpenseAdapter(
             expenseList = listOf()
@@ -72,6 +72,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         viewBinding.floatingActionButton.setSafeOnClickListener {
             Log.d(TAG, "onViewCreated: FAB Clicked")
             findNavController().navigate(R.id.action_homeFragment_to_addExpenseFragment)
+        }
+
+        viewBinding.settingIV.setSafeOnClickListener {
+            Log.d(TAG, "onViewCreated: Settings Clicked")
+            findNavController().navigate(R.id.action_homeFragment_to_settingFragment)
         }
 
         mainViewModel.todayExpense.observe(viewLifecycleOwner) { expenseEntries ->

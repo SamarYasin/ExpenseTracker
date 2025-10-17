@@ -9,8 +9,6 @@ import com.workload.inc.expensetracker.localDb.room.DailyExpenseEntry
 import com.workload.inc.expensetracker.localDb.room.ExpenseEntry
 import com.workload.inc.expensetracker.localDb.room.ExpenseEntryDao
 import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPref
-import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPrefKeys
-import com.workload.inc.expensetracker.utils.getDate
 import com.workload.inc.expensetracker.validator.UserInputValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -53,9 +51,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun addExpense(expenseEntry: ExpenseEntry, date: Long) {
+    fun addExpense(expenseEntry: ExpenseEntry, formattedDate : String) {
         viewModelScope.launch {
             expenseEntryDao.insert(expenseEntry)
+            getExpenseForToday(formattedDate)
         }
     }
 

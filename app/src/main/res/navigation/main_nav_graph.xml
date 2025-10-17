@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_addExpenseFragment"
             app:destination="@id/addExpenseFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
     </fragment>
 
     <fragment
@@ -20,5 +23,30 @@
         android:name="com.workload.inc.expensetracker.ui.addExpense.AddExpenseFragment"
         android:label="AddExpenseFragment"
         tools:layout="@layout/fragment_add_expense"/>
+
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.workload.inc.expensetracker.ui.setting.SettingFragment"
+        android:label="SettingFragment"
+        tools:layout="@layout/fragment_setting">
+        <action
+            android:id="@+id/action_settingFragment_to_languageFragment2"
+            app:destination="@id/languageFragment2" />
+        <action
+            android:id="@+id/action_settingFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/languageFragment2"
+        android:name="com.workload.inc.expensetracker.ui.language.LanguageFragment"
+        android:label="LanguageFragment"
+        tools:layout="@layout/fragment_language"/>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.workload.inc.expensetracker.ui.profile.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile"/>
 
 </navigation>

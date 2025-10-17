@@ -13,8 +13,8 @@ import com.workload.inc.expensetracker.data.expenseNameList
 import com.workload.inc.expensetracker.databinding.FragmentAddExpenseBinding
 import com.workload.inc.expensetracker.localDb.room.ExpenseEntry
 import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPrefKeys
-import com.workload.inc.expensetracker.utils.getDate
-import com.workload.inc.expensetracker.utils.getTime
+import com.workload.inc.expensetracker.utils.DateUtils.formatDateFromMillis
+import com.workload.inc.expensetracker.utils.DateUtils.formatTime12HourFromMillis
 import com.workload.inc.expensetracker.utils.setSafeOnClickListener
 import com.workload.inc.expensetracker.utils.showToast
 import com.workload.inc.expensetracker.viewmodel.MainViewModel
@@ -23,6 +23,7 @@ class AddExpenseFragment : BaseFragment<FragmentAddExpenseBinding>() {
 
     private val TAG = "AddExpenseFragment"
     private var selectedExpense: String = ""
+    private var formattedDate: String = ""
     private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun getResLayout(): Int {
@@ -63,12 +64,12 @@ class AddExpenseFragment : BaseFragment<FragmentAddExpenseBinding>() {
             }
 
         val selectedDateFormat = mainViewModel.getValue(AppSharedPrefKeys.DATE_FORMAT)
-        val formattedDate = if (selectedDateFormat.isNullOrEmpty()) {
-            getDate("dd/MM/yyyy")
+        if (selectedDateFormat.isNullOrEmpty()) {
+            showToast("Date format not set.")
         } else {
-            getDate(selectedDateFormat!!)
+            formattedDate = formatDateFromMillis(System.currentTimeMillis(), selectedDateFormat)
+            viewBinding.selectedDateFormatTV.text = formattedDate
         }
-        viewBinding.selectedDateFormatTV.text = formattedDate
 
         viewBinding.addExpenseButton.setSafeOnClickListener {
 
@@ -91,15 +92,15 @@ class AddExpenseFragment : BaseFragment<FragmentAddExpenseBinding>() {
                 expenseType = selectedExpense,
                 expenseDetail = viewBinding.expenseDetailET.text.toString(),
                 expenseAmount = viewBinding.amountET.text.toString(),
-                date = getDate(selectedDateFormat, System.currentTimeMillis()),
-                time = getTime(selectedDateFormat, System.currentTimeMillis()),
+                date = formatDateFromMillis(System.currentTimeMillis(), selectedDateFormat!!),
+                time = formatTime12HourFromMillis(),
             )
 
             Log.d(TAG, "Expense Model: $model")
 
             mainViewModel.addExpense(
                 expenseEntry = model,
-                date = System.currentTimeMillis()
+                formattedDate = formattedDate
             )
             mainViewModel.getAllDailyExpenseEntries()
 

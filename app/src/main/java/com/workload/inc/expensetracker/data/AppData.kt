@@ -54,10 +54,7 @@ val expenseNameList: List<String> = listOf(
 )
 
 val dateTimeFormats = listOf(
-    "dd-MM-yyyy HH:mm",
-    "MM-dd-yyyy HH:mm",
-    "yyyy-MM-dd HH:mm",
-    "dd-MM-yyyy HH:mm:ss",
-    "MM-dd-yyyy HH:mm:ss",
-    "yyyy-MM-dd HH:mm:ss"
+    "dd-MM-yyyy",
+    "MM-dd-yyyy",
+    "yyyy-MM-dd"
 )
