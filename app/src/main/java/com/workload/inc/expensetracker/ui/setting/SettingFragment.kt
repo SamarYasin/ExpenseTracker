@@ -8,6 +8,7 @@ import com.workload.inc.expensetracker.R
 import com.workload.inc.expensetracker.base.BaseFragment
 import com.workload.inc.expensetracker.databinding.FragmentSettingBinding
 import com.workload.inc.expensetracker.utils.setSafeOnClickListener
+import org.eazegraph.lib.BuildConfig
 
 class SettingFragment : BaseFragment<FragmentSettingBinding>() {
 
@@ -41,6 +42,8 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
         viewBinding.helpLayout.setSafeOnClickListener {
             Log.d(TAG, "onViewCreated: helpLayout")
         }
+
+        viewBinding.versionET.text = BuildConfig.VERSION_NAME
 
     }
 

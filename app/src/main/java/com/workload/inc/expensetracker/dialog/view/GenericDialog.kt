@@ -6,11 +6,11 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.example.passwordmanagerapp.databinding.GenericDialogBinding
+import com.workload.inc.expensetracker.databinding.GenericDialogBinding
 import com.workload.inc.expensetracker.dialog.WarningModel
-import com.example.passwordmanagerapp.until.goneView
-import com.example.passwordmanagerapp.until.setSafeOnClickListener
-import com.example.passwordmanagerapp.until.showView
+import com.workload.inc.expensetracker.utils.goneView
+import com.workload.inc.expensetracker.utils.setSafeOnClickListener
+import com.workload.inc.expensetracker.utils.showView
 
 class GenericDialog(
     private val warningModel: WarningModel,
