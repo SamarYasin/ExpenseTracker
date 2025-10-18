@@ -50,8 +50,31 @@ class LanguageFragment : BaseFragment<FragmentLanguageBinding>() {
         viewBinding.nextTV.setSafeOnClickListener {
             Log.d(TAG, "Next clicked")
             if (selectedLanguage != null) {
-                onBoardingViewModel.setValue(AppSharedPrefKeys.SELECTED_LANGUAGE, selectedLanguage!!)
-                findNavController().navigate(R.id.action_languageFragment_to_onBoardingFragment)
+
+                val navController = findNavController()
+                val previousDestinationId = navController.previousBackStackEntry?.destination?.id
+
+                when (previousDestinationId) {
+                    R.id.splashFragment -> {
+                        onBoardingViewModel.setValue(
+                            AppSharedPrefKeys.SELECTED_LANGUAGE,
+                            selectedLanguage!!
+                        )
+                        navController.navigate(R.id.action_languageFragment_to_onBoardingFragment)
+                    }
+
+                    R.id.settingFragment -> {
+                        navController.popBackStack()
+                    }
+
+                    else -> {
+                        Log.d(
+                            TAG,
+                            "Previous destination unknown or not handled: $previousDestinationId"
+                        )
+                    }
+                }
+
             } else {
                 showToast("Please select language")
             }

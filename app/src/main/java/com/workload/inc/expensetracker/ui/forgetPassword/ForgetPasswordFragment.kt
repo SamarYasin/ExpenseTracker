@@ -3,6 +3,7 @@ package com.workload.inc.expensetracker.ui.forgetPassword
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.addCallback
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.workload.inc.expensetracker.R
@@ -45,6 +46,13 @@ class ForgetPasswordFragment : BaseFragment<FragmentForgetPasswordBinding>() {
                 return@setSafeOnClickListener
             }
 
+            if(viewBinding.nameET.text.toString() != savedName ||
+                viewBinding.emailET.text.toString() != savedEmail ||
+                viewBinding.phoneET.text.toString() != savedNumber) {
+                showToast("Provided details do not match our records.")
+                return@setSafeOnClickListener
+            }
+
             val forgetPasswordError = onBoardingViewModel.validateForgetPasswordInput(
                 name = viewBinding.nameET.text.toString(),
                 email = viewBinding.emailET.text.toString(),
@@ -57,6 +65,11 @@ class ForgetPasswordFragment : BaseFragment<FragmentForgetPasswordBinding>() {
                 showToast(forgetPasswordError)
             }
 
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            Log.d(TAG, "onViewCreated: Back press disabled on this screen")
+            findNavController().popBackStack()
         }
 
     }

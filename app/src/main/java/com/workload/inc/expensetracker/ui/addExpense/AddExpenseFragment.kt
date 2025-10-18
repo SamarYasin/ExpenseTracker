@@ -5,18 +5,16 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.activity.addCallback
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.workload.inc.expensetracker.R
 import com.workload.inc.expensetracker.base.BaseFragment
-import com.workload.inc.expensetracker.bottomSheet.InitialSettingBottomSheet
 import com.workload.inc.expensetracker.data.expenseNameList
 import com.workload.inc.expensetracker.databinding.FragmentAddExpenseBinding
 import com.workload.inc.expensetracker.localDb.room.ExpenseEntryModel
 import com.workload.inc.expensetracker.localDb.room.UserFinanceModel
 import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPrefKeys
-import com.workload.inc.expensetracker.utils.CurrencyUtil
-import com.workload.inc.expensetracker.utils.CurrencyUtil.withCurrency
 import com.workload.inc.expensetracker.utils.DateUtils.formatDateFromMillis
 import com.workload.inc.expensetracker.utils.DateUtils.formatTime12HourFromMillis
 import com.workload.inc.expensetracker.utils.setSafeOnClickListener
@@ -76,6 +74,11 @@ class AddExpenseFragment : BaseFragment<FragmentAddExpenseBinding>() {
             viewBinding.selectedDateFormatTV.text = formattedDate
         }
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            Log.d(TAG, "onViewCreated: Back press disabled on this screen")
+            findNavController().popBackStack()
+        }
+
         viewBinding.addExpenseButton.setSafeOnClickListener {
 
             if (selectedExpense.isEmpty()) {
@@ -93,7 +96,7 @@ class AddExpenseFragment : BaseFragment<FragmentAddExpenseBinding>() {
                 return@setSafeOnClickListener
             }
 
-            val model = ExpenseEntryModel(
+            val expenseEntryModel = ExpenseEntryModel(
                 expenseType = selectedExpense,
                 expenseDetail = viewBinding.expenseDetailET.text.toString(),
                 expenseAmount = viewBinding.amountET.text.toString(),
@@ -113,11 +116,11 @@ class AddExpenseFragment : BaseFragment<FragmentAddExpenseBinding>() {
                 budget = savedFinancialSituation?.budget ?: 0
             )
 
-            Log.d(TAG, "Expense Model: $model")
+            Log.d(TAG, "Expense Model: $expenseEntryModel")
             Log.d(TAG, "Updated Financial Situation: $updatedFinancialSituation")
 
             mainViewModel.addExpense(
-                expenseEntry = model,
+                expenseEntry = expenseEntryModel,
                 formattedDate = formattedDate
             )
 
@@ -132,9 +135,7 @@ class AddExpenseFragment : BaseFragment<FragmentAddExpenseBinding>() {
 
         mainViewModel.userFinancialSituation.observe(viewLifecycleOwner) { userFinanceModel ->
             Log.d(TAG, "onViewCreated: $userFinanceModel")
-
             savedFinancialSituation = userFinanceModel
-
         }
 
     }

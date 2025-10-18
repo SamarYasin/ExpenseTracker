@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.addCallback
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.workload.inc.expensetracker.R
@@ -69,6 +70,11 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
         viewBinding.forgotPasswordTVBtn.setSafeOnClickListener {
             Log.d(TAG, "forgotPasswordTVBtn clicked")
             findNavController().navigate(R.id.action_signInFragment_to_forgetPasswordFragment)
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            Log.d(TAG, "onViewCreated: Back press disabled on this screen")
+            findNavController().popBackStack()
         }
 
     }

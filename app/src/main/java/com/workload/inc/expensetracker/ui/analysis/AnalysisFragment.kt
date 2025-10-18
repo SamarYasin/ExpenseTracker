@@ -1,24 +1,28 @@
-package com.workload.inc.expensetracker.ui.profile
+package com.workload.inc.expensetracker.ui.analysis
 
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.addCallback
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.workload.inc.expensetracker.R
 import com.workload.inc.expensetracker.base.BaseFragment
-import com.workload.inc.expensetracker.databinding.FragmentProfileBinding
+import com.workload.inc.expensetracker.databinding.FragmentAnalysisBinding
+import com.workload.inc.expensetracker.viewmodel.MainViewModel
+import kotlin.getValue
 
-class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
+class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>() {
 
-    private val TAG = "ProfileFragment"
+    private val TAG = "AnalysisFragment"
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun getResLayout(): Int {
-        return R.layout.fragment_profile
+        return R.layout.fragment_analysis
     }
 
-    override fun inflateViewBinding(): FragmentProfileBinding {
-        return FragmentProfileBinding.inflate(layoutInflater)
+    override fun inflateViewBinding(): FragmentAnalysisBinding {
+        return FragmentAnalysisBinding.inflate(layoutInflater)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

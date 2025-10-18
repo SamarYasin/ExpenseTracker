@@ -35,6 +35,9 @@
         <action
             android:id="@+id/action_settingFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_analysisFragment"
+            app:destination="@id/analysisFragment" />
     </fragment>
 
     <fragment
@@ -48,5 +51,11 @@
         android:name="com.workload.inc.expensetracker.ui.profile.ProfileFragment"
         android:label="ProfileFragment"
         tools:layout="@layout/fragment_profile"/>
+
+    <fragment
+        android:id="@+id/analysisFragment"
+        android:name="com.workload.inc.expensetracker.ui.analysis.AnalysisFragment"
+        android:label="fragment_analysis"
+        tools:layout="@layout/fragment_analysis" />
 
 </navigation>

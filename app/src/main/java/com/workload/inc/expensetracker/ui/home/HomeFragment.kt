@@ -76,7 +76,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         }
 
         expenseAdapter = ExpenseAdapter(
-            expenseList = listOf()
+            expenseList = listOf(),
+            onExpenseClickListener = { expenseEntry ->
+                Log.d(TAG, "onViewCreated: Clicked on Expense Entry: $expenseEntry")
+            }
         )
 
         viewBinding.expenseRV.addItemDecoration(VerticalSpaceItemDecoration(16))
@@ -239,15 +242,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
 
             viewBinding.availableBalanceTV.text =
-                userFinanceModel?.balance.toString().withCurrency()
-            viewBinding.availableBudgetTV.text = userFinanceModel?.budget.toString().withCurrency()
-            viewBinding.expenseTV.text = userFinanceModel?.totalExpense.toString().withCurrency()
+                userFinanceModel.balance.toString().withCurrency()
+            viewBinding.availableBudgetTV.text =
+                userFinanceModel.budget.toString().withCurrency()
+            viewBinding.expenseTV.text =
+                userFinanceModel.totalExpense.toString().withCurrency()
 
         }
 
     }
 
-    private fun setUpPieChart(entries: List<DailyExpenseEntryModel>) {
+    private fun setUpPieChart(
+        entries: List<DailyExpenseEntryModel>
+    ) {
 
         entries.forEach { item ->
 

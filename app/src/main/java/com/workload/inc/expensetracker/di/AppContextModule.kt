@@ -11,7 +11,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 object AppContextModule {
+
     @Provides
     @Singleton
     fun provideApplicationContext(@ApplicationContext context: Context): Context = context
+
 }

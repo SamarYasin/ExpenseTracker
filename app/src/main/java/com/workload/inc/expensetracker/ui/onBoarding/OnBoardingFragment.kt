@@ -3,6 +3,7 @@ package com.workload.inc.expensetracker.ui.onBoarding
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -155,6 +156,11 @@ class OnBoardingFragment : BaseFragment<FragmentOnBoardingBinding>() {
                 }
             }
         })
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            Log.d(TAG, "onViewCreated: Back press disabled on this screen")
+            findNavController().popBackStack()
+        }
 
     }
 

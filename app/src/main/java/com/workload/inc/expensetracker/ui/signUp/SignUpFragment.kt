@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.activity.addCallback
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.workload.inc.expensetracker.R
@@ -12,7 +13,6 @@ import com.workload.inc.expensetracker.base.BaseFragment
 import com.workload.inc.expensetracker.data.dateTimeFormats
 import com.workload.inc.expensetracker.databinding.FragmentSignUpBinding
 import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPrefKeys
-import com.workload.inc.expensetracker.utils.CurrencyUtil
 import com.workload.inc.expensetracker.utils.setSafeOnClickListener
 import com.workload.inc.expensetracker.utils.showToast
 import com.workload.inc.expensetracker.viewmodel.OnBoardingViewModel
@@ -114,6 +114,11 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
                     showToast("Please select a date format")
                 }
             }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            Log.d(TAG, "onViewCreated: Back press disabled on this screen")
+            findNavController().popBackStack()
+        }
 
     }
 

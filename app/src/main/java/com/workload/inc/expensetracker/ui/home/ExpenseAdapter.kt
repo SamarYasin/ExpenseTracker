@@ -12,7 +12,8 @@ import com.workload.inc.expensetracker.localDb.room.ExpenseEntryModel
 import com.workload.inc.expensetracker.utils.CurrencyUtil.withCurrency
 
 class ExpenseAdapter(
-    private var expenseList: List<ExpenseEntryModel>
+    private var expenseList: List<ExpenseEntryModel>,
+    private var onExpenseClickListener: (ExpenseEntryModel) -> Unit
 ) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
 
     class ExpenseViewHolder(val binding: ExpenseItemBinding) : RecyclerView.ViewHolder(binding.root)
@@ -43,6 +44,11 @@ class ExpenseAdapter(
         holder.binding.expenseCategoryNameTV.text = expense.expenseType
         holder.binding.expenseAmountTV.text = expense.expenseAmount.withCurrency()
         holder.binding.expenseNameTV.text = expense.expenseDetail
+
+        holder.itemView.setOnClickListener {
+            onExpenseClickListener(expense)
+        }
+
     }
 
     private fun getExpenseIcon(
