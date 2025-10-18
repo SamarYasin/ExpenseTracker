@@ -37,7 +37,161 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <ImageView
+            android:id="@+id/profileIV"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_profile"
+            android:clipToOutline="true"
+            android:cropToPadding="true"
+            android:layout_marginTop="16dp"
+            android:contentDescription="Image"
+            app:layout_constraintTop_toBottomOf="@+id/topBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
+        <LinearLayout
+            android:id="@+id/nameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginTop="16dp"
+            android:paddingVertical="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/profileIV">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semi_bold"
+                android:letterSpacing="-0.03"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="0dp"
+                android:text="Name"
+                android:textAlignment="textStart"
+                android:layout_weight="0.4"
+                android:textColor="#292929"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/nameET"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semi_bold"
+                android:letterSpacing="-0.03"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="0dp"
+                android:text="Samar Yasin"
+                android:textAlignment="textEnd"
+                android:layout_weight="0.6"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/emailLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginTop="16dp"
+            android:paddingVertical="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/nameLayout">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semi_bold"
+                android:letterSpacing="-0.03"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="0dp"
+                android:text="Email"
+                android:textAlignment="textStart"
+                android:layout_weight="0.4"
+                android:textColor="#292929"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/emailET"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semi_bold"
+                android:letterSpacing="-0.03"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="0dp"
+                android:text="samar.m.yasin@gmail.com"
+                android:textAlignment="textEnd"
+                android:layout_weight="0.6"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/numberLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginTop="16dp"
+            android:paddingVertical="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/emailLayout">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semi_bold"
+                android:letterSpacing="-0.03"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="0dp"
+                android:text="Phone Number"
+                android:textAlignment="textStart"
+                android:layout_weight="0.4"
+                android:textColor="#292929"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/numberET"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semi_bold"
+                android:letterSpacing="-0.03"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="0dp"
+                android:text="0323 4697926"
+                android:textAlignment="textEnd"
+                android:layout_weight="0.6"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/logOutButton"
+            android:layout_width="100dp"
+            android:layout_height="52dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            android:layout_marginTop="64dp"
+            app:strokeColor="@color/md_theme_light_outline"
+            app:layout_constraintTop_toBottomOf="@+id/numberLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/inter_semi_bold"
+                android:gravity="center"
+                android:letterSpacing="-0.03"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="0dp"
+                android:text="Log Out"
+                android:textColor="#292929"
+                android:textSize="16sp" />
+
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
