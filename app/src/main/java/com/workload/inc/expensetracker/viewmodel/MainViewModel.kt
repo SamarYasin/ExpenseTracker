@@ -113,4 +113,15 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    /**
+     * For clearing all data (Used in Settings)
+     */
+    fun clearAllData() {
+        viewModelScope.launch {
+            expenseEntryDao.deleteAll()
+            dailyExpenseDao.deleteAll()
+            userFinanceDao.deleteAll()
+        }
+    }
+
 }

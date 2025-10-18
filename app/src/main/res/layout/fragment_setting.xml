@@ -104,13 +104,46 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/languageLayout"
+            android:id="@+id/clearDataBaseLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="1"
             android:paddingVertical="8dp"
             app:layout_constraintTop_toBottomOf="@+id/analysisLayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semi_bold"
+                android:letterSpacing="-0.03"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="0dp"
+                android:text="Clear Database"
+                android:layout_weight="0.9"
+                android:layout_gravity="start|center_vertical"
+                android:textColor="#292929"
+                android:textSize="16sp"/>
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="4dp"
+                android:layout_weight="0.1"
+                android:layout_gravity="end|center_vertical"
+                android:src="@drawable/ic_next"
+                android:contentDescription="Image"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/languageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:paddingVertical="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/clearDataBaseLayout">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -232,7 +265,6 @@
                 android:letterSpacing="-0.03"
                 android:includeFontPadding="false"
                 android:lineSpacingExtra="0dp"
-                android:text="0.0.1"
                 android:layout_weight="0.1"
                 android:layout_gravity="start|center_vertical"
                 android:textColor="#292929"

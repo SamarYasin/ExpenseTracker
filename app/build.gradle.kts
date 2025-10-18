@@ -77,16 +77,17 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
 
     implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.recyclerview)
-    ksp(libs.androidx.room.compiler)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 
     implementation(libs.androidx.navigation.fragment)
 
-    implementation("com.github.blackfizz:eazegraph:1.2.2@aar")
+    implementation("com.github.blackfizz:eazegraph:1.2.3@aar")
     implementation("com.nineoldandroids:library:2.4.0")
 
     testImplementation(libs.junit)
