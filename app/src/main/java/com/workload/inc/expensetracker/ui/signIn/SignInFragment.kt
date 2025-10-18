@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.workload.inc.expensetracker.R
 import com.workload.inc.expensetracker.base.BaseFragment
 import com.workload.inc.expensetracker.databinding.FragmentSignInBinding
+import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPrefKeys
 import com.workload.inc.expensetracker.ui.MainActivity
 import com.workload.inc.expensetracker.utils.setSafeOnClickListener
 import com.workload.inc.expensetracker.utils.showToast
@@ -18,6 +19,8 @@ import kotlin.getValue
 class SignInFragment : BaseFragment<FragmentSignInBinding>() {
 
     private val TAG = "SignInFragment"
+    private var savedEmail: String? = null
+    private var savedPassword: String? = null
     private val onBoardingViewModel: OnBoardingViewModel by activityViewModels()
 
     override fun getResLayout(): Int {
@@ -33,6 +36,16 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
 
         viewBinding.loginButton.setSafeOnClickListener {
             Log.d(TAG, "registerButton clicked")
+
+            savedEmail = onBoardingViewModel.getValue(AppSharedPrefKeys.USER_EMAIL)
+            savedPassword = onBoardingViewModel.getValue(AppSharedPrefKeys.USER_PASSWORD)
+
+            if (savedEmail.isNullOrEmpty() or savedPassword.isNullOrEmpty()) {
+                showToast("No user found, please sign up first")
+                findNavController().navigate(R.id.action_signInFragment_to_signUpFragment)
+                return@setSafeOnClickListener
+            }
+
             val loginError = onBoardingViewModel.validateLogInInput(
                 email = viewBinding.emailET.text.toString(),
                 password = viewBinding.passwordET.text.toString(),
@@ -44,11 +57,6 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
                 startActivity(mainIntent)
             } else {
                 showToast(loginError)
-                //TODO: Remove below lines after testing
-                val mainIntent = Intent(activity, MainActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                }
-                startActivity(mainIntent)
             }
 
         }

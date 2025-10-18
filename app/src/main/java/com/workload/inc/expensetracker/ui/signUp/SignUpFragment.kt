@@ -21,6 +21,10 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
 
     private val TAG = "SignUpFragment"
     private val onBoardingViewModel: OnBoardingViewModel by activityViewModels()
+    private var savedName: String? = null
+    private var savedEmail: String? = null
+    private var savedPassword: String? = null
+    private var savedNumber: String? = null
 
     override fun getResLayout(): Int {
         return R.layout.fragment_sign_up
@@ -36,26 +40,52 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
         viewBinding.registerButton.setSafeOnClickListener {
             Log.d(TAG, "Register button clicked")
 
-            val registrationError = onBoardingViewModel.validateRegistrationInput(
-                name = viewBinding.nameET.text.toString(),
-                email = viewBinding.emailET.text.toString(),
-                password = viewBinding.passwordET.text.toString(),
-                passwordConfirmation = viewBinding.passwordConfirmationET.text.toString(),
-                phoneNumber = viewBinding.phoneET.text.toString()
-            )
+            savedName = onBoardingViewModel.getValue(AppSharedPrefKeys.USER_NAME)
+            savedEmail = onBoardingViewModel.getValue(AppSharedPrefKeys.USER_EMAIL)
+            savedPassword = onBoardingViewModel.getValue(AppSharedPrefKeys.USER_PASSWORD)
+            savedNumber = onBoardingViewModel.getValue(AppSharedPrefKeys.PHONE_NUMBER)
 
-            if (registrationError.isEmpty()) {
-                findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
+            if (savedName.isNullOrEmpty() or savedEmail.isNullOrEmpty() or savedPassword.isNullOrEmpty() or savedNumber.isNullOrEmpty()) {
+                val registrationError = onBoardingViewModel.validateRegistrationInput(
+                    name = viewBinding.nameET.text.toString(),
+                    email = viewBinding.emailET.text.toString(),
+                    password = viewBinding.passwordET.text.toString(),
+                    passwordConfirmation = viewBinding.passwordConfirmationET.text.toString(),
+                    phoneNumber = viewBinding.phoneET.text.toString()
+                )
 
-                onBoardingViewModel.setValue(AppSharedPrefKeys.USER_NAME, viewBinding.nameET.text.toString())
-                onBoardingViewModel.setValue(AppSharedPrefKeys.USER_EMAIL, viewBinding.emailET.text.toString())
-                onBoardingViewModel.setValue(AppSharedPrefKeys.USER_PASSWORD, viewBinding.passwordET.text.toString())
-                onBoardingViewModel.setValue(AppSharedPrefKeys.PHONE_NUMBER, viewBinding.phoneET.text.toString())
-                onBoardingViewModel.setValue(AppSharedPrefKeys.DATE_FORMAT, viewBinding.selectedDateFormatTV.text.toString())
+                if (registrationError.isEmpty()) {
+                    findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
 
+                    onBoardingViewModel.setValue(
+                        AppSharedPrefKeys.USER_NAME,
+                        viewBinding.nameET.text.toString()
+                    )
+                    onBoardingViewModel.setValue(
+                        AppSharedPrefKeys.USER_EMAIL,
+                        viewBinding.emailET.text.toString()
+                    )
+                    onBoardingViewModel.setValue(
+                        AppSharedPrefKeys.USER_PASSWORD,
+                        viewBinding.passwordET.text.toString()
+                    )
+                    onBoardingViewModel.setValue(
+                        AppSharedPrefKeys.PHONE_NUMBER,
+                        viewBinding.phoneET.text.toString()
+                    )
+                    onBoardingViewModel.setValue(
+                        AppSharedPrefKeys.DATE_FORMAT,
+                        viewBinding.selectedDateFormatTV.text.toString()
+                    )
+
+                } else {
+                    showToast(registrationError)
+                }
             } else {
-                showToast(registrationError)
+                showToast("User already registered. Please sign in.")
+                return@setSafeOnClickListener
             }
+
         }
 
         val adapter = ArrayAdapter(
@@ -66,17 +96,24 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         viewBinding.dateFormatSpinner.adapter = adapter
 
-        viewBinding.dateFormatSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedFormat = dateTimeFormats[position]
-                Log.d(TAG, "Selected date format: $selectedFormat")
-                viewBinding.selectedDateFormatTV.text = selectedFormat
+        viewBinding.dateFormatSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedFormat = dateTimeFormats[position]
+                    Log.d(TAG, "Selected date format: $selectedFormat")
+                    viewBinding.selectedDateFormatTV.text = selectedFormat
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    Log.d(TAG, "No date format selected")
+                    showToast("Please select a date format")
+                }
             }
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                Log.d(TAG, "No date format selected")
-                showToast("Please select a date format")
-            }
-        }
 
     }
 

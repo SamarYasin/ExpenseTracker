@@ -70,9 +70,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun updateUserFinancialSituation(userFinanceModel: UserFinanceModel) {
+    fun insertOrUpdateUserFinance(userFinanceModel: UserFinanceModel) {
         viewModelScope.launch {
-            userFinanceDao.updateUserFinance(userFinanceModel)
+            userFinanceDao.insertOrUpdateUserFinance(userFinanceModel)
             getUserFinancialSituation()
         }
     }

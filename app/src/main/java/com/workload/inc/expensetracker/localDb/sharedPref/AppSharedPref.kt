@@ -22,7 +22,7 @@ class AppSharedPref @Inject constructor(
         appSharedPref.edit { putString(key, value) }
     }
 
-    fun getString(key: String, defaultValue: String? = null): String? {
+    fun getString(key: String, defaultValue: String = ""): String? {
         return appSharedPref.getString(key, defaultValue)
     }
 

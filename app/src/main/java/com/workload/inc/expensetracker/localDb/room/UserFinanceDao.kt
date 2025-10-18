@@ -15,7 +15,4 @@ interface UserFinanceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdateUserFinance(userFinanceModel: UserFinanceModel)
 
-    @Update
-    suspend fun updateUserFinance(userFinanceModel: UserFinanceModel)
-
 }

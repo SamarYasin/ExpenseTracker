@@ -36,7 +36,7 @@ class ExpenseAdapter(
         val expense = expenseList[position]
         val context = holder.binding.root.context
 
-        val expenseIcon = AppCompatResources.getDrawable(context, R.drawable.ic_income)
+        val expenseIcon = AppCompatResources.getDrawable(context, R.drawable.ic_expense)
         holder.binding.expenseIV.setImageDrawable(getExpenseIcon(context, expense.expenseType))
         holder.binding.amountDirectionIV.setImageDrawable(expenseIcon)
 

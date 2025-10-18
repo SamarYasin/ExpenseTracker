@@ -11,8 +11,10 @@ import com.workload.inc.expensetracker.base.BaseFragment
 import com.workload.inc.expensetracker.bottomSheet.BudgetBottomSheet
 import com.workload.inc.expensetracker.bottomSheet.CurrencyBottomSheet
 import com.workload.inc.expensetracker.bottomSheet.IncomeBottomSheet
+import com.workload.inc.expensetracker.bottomSheet.InitialSettingBottomSheet
 import com.workload.inc.expensetracker.databinding.FragmentHomeBinding
 import com.workload.inc.expensetracker.localDb.room.DailyExpenseEntryModel
+import com.workload.inc.expensetracker.localDb.room.UserFinanceModel
 import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPrefKeys
 import com.workload.inc.expensetracker.utils.CurrencyUtil
 import com.workload.inc.expensetracker.utils.CurrencyUtil.withCurrency
@@ -47,6 +49,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private val mainViewModel: MainViewModel by activityViewModels()
     private var expenseAdapter: ExpenseAdapter? = null
     private var formattedDate: String = ""
+    private var savedFinancialSituation : UserFinanceModel? = null
 
     override fun getResLayout(): Int {
         return R.layout.fragment_home
@@ -69,7 +72,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             // Entries for Entire Day
             mainViewModel.getAllDailyExpenseEntries()
             // User Financial Situation
-            mainViewModel.userFinancialSituation
+            mainViewModel.getUserFinancialSituation()
         }
 
         expenseAdapter = ExpenseAdapter(
@@ -117,7 +120,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             BudgetBottomSheet(
                 onAllowedBudget = { allowedBudget ->
                     Log.d(TAG, "onViewCreated: $allowedBudget")
-
+                    mainViewModel.insertOrUpdateUserFinance(
+                        UserFinanceModel(
+                            id = 1,
+                            totalIncome = savedFinancialSituation?.totalIncome ?: 0,
+                            totalExpense = savedFinancialSituation?.totalExpense ?: 0,
+                            balance = savedFinancialSituation?.balance ?: 0,
+                            budget = allowedBudget.toInt(),
+                        )
+                    )
                 }
             ).show(
                 parentFragmentManager,
@@ -130,7 +141,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             IncomeBottomSheet(
                 onSetIncome = { incomeAmount ->
                     Log.d(TAG, "onViewCreated: $incomeAmount")
-
+                    mainViewModel.insertOrUpdateUserFinance(
+                        UserFinanceModel(
+                            id = 1,
+                            totalIncome = incomeAmount.toInt(),
+                            totalExpense = savedFinancialSituation?.totalExpense ?: 0,
+                            balance = savedFinancialSituation?.balance ?: 0,
+                            budget = savedFinancialSituation?.budget ?: 0,
+                        )
+                    )
                 }
             ).show(
                 parentFragmentManager,
@@ -183,9 +202,47 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
         mainViewModel.userFinancialSituation.observe(viewLifecycleOwner) { userFinanceModel ->
             Log.d(TAG, "onViewCreated: $userFinanceModel")
-            viewBinding.availableBalanceTV.text = userFinanceModel?.balance.toString().withCurrency()
+
+            savedFinancialSituation = userFinanceModel
+
+            if (userFinanceModel == null ||
+                (userFinanceModel.balance == 0 && userFinanceModel.budget == 0 && userFinanceModel.totalIncome == 0)
+            ) {
+                Log.d(TAG, "onViewCreated: Null")
+                viewBinding.availableBalanceTV.text = 0.toString().withCurrency()
+                viewBinding.availableBudgetTV.text = 0.toString().withCurrency()
+                viewBinding.expenseTV.text = 0.toString().withCurrency()
+
+                Log.d(TAG, "onViewCreated: Showing Initial Setting Bottom Sheet")
+                InitialSettingBottomSheet(
+                    onDoneIncome = { income, budget, currency ->
+                        Log.d(
+                            TAG,
+                            "onViewCreated: Income: $income, Budget: $budget, Currency: $currency"
+                        )
+                        CurrencyUtil.setCurrencyType(currency)
+                        mainViewModel.insertOrUpdateUserFinance(
+                            UserFinanceModel(
+                                id = 1,
+                                totalIncome = income.toInt(),
+                                totalExpense = 0,
+                                balance = income.toInt(),
+                                budget = budget.toInt(),
+                            )
+                        )
+                    }
+                ).show(
+                    parentFragmentManager,
+                    "InitialSettingBottomSheet"
+                )
+                return@observe
+            }
+
+            viewBinding.availableBalanceTV.text =
+                userFinanceModel?.balance.toString().withCurrency()
             viewBinding.availableBudgetTV.text = userFinanceModel?.budget.toString().withCurrency()
             viewBinding.expenseTV.text = userFinanceModel?.totalExpense.toString().withCurrency()
+
         }
 
     }

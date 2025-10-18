@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.workload.inc.expensetracker.R
 import com.workload.inc.expensetracker.base.BaseFragment
 import com.workload.inc.expensetracker.databinding.FragmentForgetPasswordBinding
+import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPrefKeys
 import com.workload.inc.expensetracker.utils.setSafeOnClickListener
 import com.workload.inc.expensetracker.utils.showToast
 import com.workload.inc.expensetracker.viewmodel.OnBoardingViewModel
@@ -16,6 +17,9 @@ import kotlin.getValue
 class ForgetPasswordFragment : BaseFragment<FragmentForgetPasswordBinding>() {
 
     private val TAG = "ForgetPasswordFragment"
+    private var savedName: String? = null
+    private var savedEmail: String? = null
+    private var savedNumber: String? = null
     private val onBoardingViewModel: OnBoardingViewModel by activityViewModels()
 
     override fun getResLayout(): Int {
@@ -29,8 +33,17 @@ class ForgetPasswordFragment : BaseFragment<FragmentForgetPasswordBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        savedName = onBoardingViewModel.getValue(AppSharedPrefKeys.USER_NAME)
+        savedEmail = onBoardingViewModel.getValue(AppSharedPrefKeys.USER_EMAIL)
+        savedNumber = onBoardingViewModel.getValue(AppSharedPrefKeys.PHONE_NUMBER)
+
         viewBinding.forgetPasswordButton.setSafeOnClickListener {
             Log.d(TAG, "Forget Password Button Clicked")
+
+            if (savedName.isNullOrEmpty() or savedEmail.isNullOrEmpty() or savedNumber.isNullOrEmpty()) {
+                showToast("No account found. Please sign up first.")
+                return@setSafeOnClickListener
+            }
 
             val forgetPasswordError = onBoardingViewModel.validateForgetPasswordInput(
                 name = viewBinding.nameET.text.toString(),

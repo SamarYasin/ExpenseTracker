@@ -35,7 +35,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
         val userIsRegistered = onBoardingViewModel.getBoolean(AppSharedPrefKeys.IS_REGISTERED)
 
         CoroutineScope(Dispatchers.Main).launch {
-            delay(3000)
+            delay(5000)
             if (userIsRegistered) {
                 Log.d(TAG, "User is registered, navigating to SignIn")
                 findNavController().navigate(R.id.action_splashFragment_to_signInFragment)

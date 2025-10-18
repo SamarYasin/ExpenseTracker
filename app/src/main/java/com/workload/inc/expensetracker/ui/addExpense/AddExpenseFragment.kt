@@ -9,10 +9,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.workload.inc.expensetracker.R
 import com.workload.inc.expensetracker.base.BaseFragment
+import com.workload.inc.expensetracker.bottomSheet.InitialSettingBottomSheet
 import com.workload.inc.expensetracker.data.expenseNameList
 import com.workload.inc.expensetracker.databinding.FragmentAddExpenseBinding
 import com.workload.inc.expensetracker.localDb.room.ExpenseEntryModel
+import com.workload.inc.expensetracker.localDb.room.UserFinanceModel
 import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPrefKeys
+import com.workload.inc.expensetracker.utils.CurrencyUtil
+import com.workload.inc.expensetracker.utils.CurrencyUtil.withCurrency
 import com.workload.inc.expensetracker.utils.DateUtils.formatDateFromMillis
 import com.workload.inc.expensetracker.utils.DateUtils.formatTime12HourFromMillis
 import com.workload.inc.expensetracker.utils.setSafeOnClickListener
@@ -24,6 +28,7 @@ class AddExpenseFragment : BaseFragment<FragmentAddExpenseBinding>() {
     private val TAG = "AddExpenseFragment"
     private var selectedExpense: String = ""
     private var formattedDate: String = ""
+    private var savedFinancialSituation : UserFinanceModel? = null
     private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun getResLayout(): Int {
@@ -96,16 +101,39 @@ class AddExpenseFragment : BaseFragment<FragmentAddExpenseBinding>() {
                 time = formatTime12HourFromMillis(),
             )
 
+            val updatedFinancialSituation = UserFinanceModel(
+                id = savedFinancialSituation?.id ?: 1,
+                totalIncome = savedFinancialSituation?.totalIncome ?: 0,
+                totalExpense = savedFinancialSituation?.totalExpense?.plus(
+                    viewBinding.amountET.text.toString().toInt()
+                ) ?: 0,
+                balance = savedFinancialSituation?.balance?.minus(
+                    viewBinding.amountET.text.toString().toInt()
+                ) ?: 0,
+                budget = savedFinancialSituation?.budget ?: 0
+            )
+
             Log.d(TAG, "Expense Model: $model")
+            Log.d(TAG, "Updated Financial Situation: $updatedFinancialSituation")
 
             mainViewModel.addExpense(
                 expenseEntry = model,
                 formattedDate = formattedDate
             )
+
+            mainViewModel.insertOrUpdateUserFinance(updatedFinancialSituation)
+
             mainViewModel.getAllDailyExpenseEntries()
 
             showToast("Expense Added Successfully")
             findNavController().popBackStack()
+
+        }
+
+        mainViewModel.userFinancialSituation.observe(viewLifecycleOwner) { userFinanceModel ->
+            Log.d(TAG, "onViewCreated: $userFinanceModel")
+
+            savedFinancialSituation = userFinanceModel
 
         }
 

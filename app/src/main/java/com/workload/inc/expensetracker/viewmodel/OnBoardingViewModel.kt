@@ -48,6 +48,10 @@ class OnBoardingViewModel @Inject constructor(
         val passwordConfirmationError = userInputValidator.checkInputField(FieldType.PASSWORD, passwordConfirmation)
         if (passwordConfirmationError.isNotEmpty()) return passwordConfirmationError
 
+        if(password != passwordConfirmation) {
+            return "Passwords do not match"
+        }
+
         val phoneNumberError = userInputValidator.checkInputField(FieldType.MOBILE_NUMBER, phoneNumber)
         if (phoneNumberError.isNotEmpty()) return phoneNumberError
 
