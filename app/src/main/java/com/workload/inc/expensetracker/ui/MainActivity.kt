@@ -26,13 +26,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // TODO: Need to handle observed data properly and add add AlarmScheduler functionality
         mainViewModel.dailyExpenseEntries.observe(this) { expenseEntries ->
 
-
+            AlarmScheduler.scheduleDailyAlarm(this)
 
         }
-
-        AlarmScheduler.scheduleDailyAlarm(this)
 
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.mainFragmentContainer) as NavHostFragment
