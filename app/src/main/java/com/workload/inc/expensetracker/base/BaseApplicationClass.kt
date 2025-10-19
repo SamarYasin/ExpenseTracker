@@ -22,21 +22,27 @@ class BaseApplicationClass : Application() {
                     Log.d(TAG, "onActivityCreated: ")
                     DebugBannerUtil.injectBanner(activity)
                 }
+
                 override fun onActivityStarted(activity: Activity) {
                     Log.d(TAG, "onActivityStarted: ")
                 }
+
                 override fun onActivityResumed(activity: Activity) {
                     Log.d(TAG, "onActivityResumed: ")
                 }
+
                 override fun onActivityPaused(activity: Activity) {
                     Log.d(TAG, "onActivityPaused: ")
                 }
+
                 override fun onActivityStopped(activity: Activity) {
                     Log.d(TAG, "onActivityStopped: ")
                 }
+
                 override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
                     Log.d(TAG, "onActivitySaveInstanceState: ")
                 }
+
                 override fun onActivityDestroyed(activity: Activity) {
                     Log.d(TAG, "onActivityDestroyed: ")
                 }

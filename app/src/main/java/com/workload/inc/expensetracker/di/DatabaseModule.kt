@@ -39,7 +39,7 @@ object DatabaseModule {
     }
 
     @Provides
-    fun provideUserFinanceDao(db: ExpenseTrackerDataBase) : UserFinanceDao{
+    fun provideUserFinanceDao(db: ExpenseTrackerDataBase): UserFinanceDao {
         return db.userFinanceDao()
     }
 

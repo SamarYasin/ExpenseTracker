@@ -47,40 +47,45 @@ class InitialSettingBottomSheet(
         binding.doneBtn.setSafeOnClickListener {
             val income = binding.incomeET.text.toString()
             val allowedBudget = binding.budgetET.text.toString().trim()
-            if( income.isEmpty() || allowedBudget.isEmpty()) {
+            if (income.isEmpty() || allowedBudget.isEmpty()) {
                 Log.d(TAG, "Income or Budget is empty")
                 showToast("Please enter income, budget and select currency")
                 return@setSafeOnClickListener
             }
             onDoneIncome?.invoke(income, allowedBudget, selectedCurrency ?: currencyList[0])
-            Log.d(TAG, "doneBtn clicked with income: $income, budget: $allowedBudget, currency: $selectedCurrency")
+            Log.d(
+                TAG,
+                "doneBtn clicked with income: $income, budget: $allowedBudget, currency: $selectedCurrency"
+            )
             dismiss()
         }
 
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, currencyList)
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, currencyList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.currencySpinner.adapter = adapter
 
-        binding.currencySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                if (!isSpinnerInitialized) {
-                    isSpinnerInitialized = true
-                    return // Ignore initial call
+        binding.currencySpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    if (!isSpinnerInitialized) {
+                        isSpinnerInitialized = true
+                        return // Ignore initial call
+                    }
+                    selectedCurrency = currencyList[position]
+                    Log.d(TAG, "Selected currency: $selectedCurrency")
+                    binding.selectedDateFormatTV.text = selectedCurrency
                 }
-                selectedCurrency = currencyList[position]
-                Log.d(TAG, "Selected currency: $selectedCurrency")
-                binding.selectedDateFormatTV.text = selectedCurrency
-            }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Optionally handle nothing selected
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Optionally handle nothing selected
+                }
             }
-        }
 
     }
 

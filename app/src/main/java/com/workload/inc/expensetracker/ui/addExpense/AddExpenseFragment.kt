@@ -26,7 +26,7 @@ class AddExpenseFragment : BaseFragment<FragmentAddExpenseBinding>() {
     private val TAG = "AddExpenseFragment"
     private var selectedExpense: String = ""
     private var formattedDate: String = ""
-    private var savedFinancialSituation : UserFinanceModel? = null
+    private var savedFinancialSituation: UserFinanceModel? = null
     private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun getResLayout(): Int {

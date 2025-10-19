@@ -8,12 +8,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.workload.inc.expensetracker.R
 import com.workload.inc.expensetracker.base.BaseFragment
+import com.workload.inc.expensetracker.bottomSheet.PasswordResetBottomSheet
 import com.workload.inc.expensetracker.databinding.FragmentForgetPasswordBinding
 import com.workload.inc.expensetracker.localDb.sharedPref.AppSharedPrefKeys
 import com.workload.inc.expensetracker.utils.setSafeOnClickListener
 import com.workload.inc.expensetracker.utils.showToast
 import com.workload.inc.expensetracker.viewmodel.OnBoardingViewModel
-import kotlin.getValue
 
 class ForgetPasswordFragment : BaseFragment<FragmentForgetPasswordBinding>() {
 
@@ -46,9 +46,10 @@ class ForgetPasswordFragment : BaseFragment<FragmentForgetPasswordBinding>() {
                 return@setSafeOnClickListener
             }
 
-            if(viewBinding.nameET.text.toString() != savedName ||
+            if (viewBinding.nameET.text.toString() != savedName ||
                 viewBinding.emailET.text.toString() != savedEmail ||
-                viewBinding.phoneET.text.toString() != savedNumber) {
+                viewBinding.phoneET.text.toString() != savedNumber
+            ) {
                 showToast("Provided details do not match our records.")
                 return@setSafeOnClickListener
             }
@@ -60,7 +61,15 @@ class ForgetPasswordFragment : BaseFragment<FragmentForgetPasswordBinding>() {
             )
 
             if (forgetPasswordError.isEmpty()) {
-                findNavController().popBackStack()
+                PasswordResetBottomSheet(
+                    onSetPassword = { password ->
+                        Log.d(TAG, "Password Reset Button Clicked")
+                        onBoardingViewModel.setValue(AppSharedPrefKeys.USER_PASSWORD, password)
+                        showToast("Password reset successfully.")
+                        findNavController().popBackStack()
+                    }
+                ).show(parentFragmentManager, "PasswordResetBottomSheet")
+
             } else {
                 showToast(forgetPasswordError)
             }

@@ -118,6 +118,7 @@
             android:layout_marginTop="16dp"
             android:hint="Enter Password"
             app:boxBackgroundMode="outline"
+            app:endIconMode="password_toggle"
             app:layout_constraintTop_toBottomOf="@+id/phoneTV">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -143,6 +144,7 @@
             android:layout_marginTop="16dp"
             android:hint="Confirm Password"
             app:boxBackgroundMode="outline"
+            app:endIconMode="password_toggle"
             app:layout_constraintTop_toBottomOf="@+id/passwordTV">
 
             <com.google.android.material.textfield.TextInputEditText

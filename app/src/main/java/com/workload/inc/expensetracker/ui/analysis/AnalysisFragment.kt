@@ -15,6 +15,21 @@ import kotlin.getValue
 class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>() {
 
     private val TAG = "AnalysisFragment"
+    private var residenceExpense: Int = 0
+    private var foodExpense: Int = 0
+    private var entertainmentExpense: Int = 0
+    private var insuranceExpense: Int = 0
+    private var utilitiesExpense: Int = 0
+    private var personalCareExpense: Int = 0
+    private var educationExpense: Int = 0
+    private var healthExpense: Int = 0
+    private var othersExpense: Int = 0
+    private var fuelExpense: Int = 0
+    private var clothingExpense: Int = 0
+    private var shoppingExpense: Int = 0
+    private var giftsDonationsExpense: Int = 0
+    private var travelExpense: Int = 0
+    private var taxesExpense: Int = 0
     private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun getResLayout(): Int {
