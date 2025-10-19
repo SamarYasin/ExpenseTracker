@@ -50,6 +50,9 @@ jobs:
           api-level: ${{ matrix.api-level }}
           script: ./gradlew connectedCheck
 
+      - name: Terminate Emulator
+        run: /usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 emu kill || true
+
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
