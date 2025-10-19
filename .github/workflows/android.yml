@@ -10,6 +10,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        api-level: [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,8 +33,28 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle
 
+      - name: Check for merge conflicts with master
+        run: |
+          git fetch origin master
+          git merge --no-commit --no-ff origin/master || (echo "Merge conflict detected!" && exit 1)
+
       - name: Build with Gradle
         run: ./gradlew build
 
       - name: Run unit tests
         run: ./gradlew test
+
+      - name: Run Instrumentation Tests on Emulator (UI tests)
+        uses: ReactiveCircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          script: ./gradlew connectedCheck
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
